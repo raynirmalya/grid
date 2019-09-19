@@ -1,0 +1,2 @@
+<input [hidden]="true" #file type="file" (change)="onFileChange($event)" placeholder="Upload file" accept=".xlsx,.xls">
+<button (click)="file.click()">Upload file</button>

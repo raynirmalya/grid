@@ -1,0 +1,28 @@
+<div  *ngIf="isModalShown" [config]="{backdrop:'static',show: true }"
+(onHidden)="onHidden()" bsModal #autoShownModal="bs-modal"
+ class="modal fade delete-popup" 
+ tabindex="-1" role="dialog" aria-hidden="true">
+     <div class="modal-dialog ">
+         <div class="modal-content  del-modal">
+             <!--<div class="modal-header">
+                       {{ config?.header }}                 
+             </div>-->
+            <div class="modal-header text-center">
+                   <img width="28" height="24" src="{{icon}}" />
+             </div>
+             <div class="modal-body">                             
+                     <div class="col-md-12 product_img text-center font-14 font-regular" l10nTranslate>
+                         {{ message }}
+                     </div>
+                     <div class="col-md-12 product_img text-center" *ngIf="isCommentPresent">
+                         <input type="text" placeholder="comments" class="form-control font-15 font-regular "
+                          name="comment" id="comment" [(ngModel)]="commentData.comment" >
+                     </div> 
+             </div>
+             <div class="del-btn-group modal-window-footer btn-shodow">
+                   <div class="del-pop-btn col-lg-6 col-md-6 col-sm-6 pad0 pull-left"><button class="width-full del-cancel del-cancel-button btn btn-default font-14 font-regular bw-cancel" (click)="reject()" l10nTranslate>Confirm.Common.Cancel</button></div>
+                   <div class="del-pop-btn col-lg-6 col-md-6 col-sm-6 pad0 pull-left"><button class="width-full del-confirm del-button btn btn-default confirm-delete  font-14 font-regular primary" (click)="accept()" l10nTranslate>Confirm.Common.Confirm</button></div>
+             </div>
+         </div>
+     </div>
+</div>

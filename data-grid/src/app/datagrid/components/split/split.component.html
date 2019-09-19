@@ -1,0 +1,10 @@
+<span>
+  <span> <input type='number' [(ngModel)]="numberOfCopy" class="small-input"  /> 
+  <!--<select [(ngModel)]="splitBy" name="split-row">
+  <ng-container  *ngFor="let c of columns">
+    <option *ngIf="c.dataType && (c.dataType === 'number' || c.dataType === 'NUMBER')" value="{{c.field}}">{{c.title}}</option>
+  </ng-container>
+  </select> -->
+  </span>
+  <span (click)="onSplit()">split</span>
+</span>

@@ -1,0 +1,156 @@
+<div class="data-grid">
+  <div class="pull-right action-buttons" *ngIf="toolbar">
+    <!--<a href="javascript:void(0)" (click)="openColumnRearrange()">column re-arrnge</a>-->
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['filterable']"></olam-toolbar-action-template-loader>
+    <i class="filter" (click)="showFilter()" *ngIf="toolBarBtns.filterable">&nbsp;</i>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['csv']"></olam-toolbar-action-template-loader>
+    <olam-xlexport *ngIf="toolBarBtns.csvExport" [data]="gridData" fileType="csv" [columns]="columns" [fileName]="exportFileName" [header]="excelHeader">CSV | </olam-xlexport>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['excelExport']"></olam-toolbar-action-template-loader>
+    <olam-xlexport *ngIf="toolBarBtns.excelExport"[data]="gridData" fileType="xslx" [columns]="columns" [fileName]="exportFileName" [header]="excelHeader">Excel |</olam-xlexport>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['selectedExport']"></olam-toolbar-action-template-loader>
+    <olam-xlexport *ngIf="toolBarBtns.selectedExport" [data]="selectedRows" fileType="xslx" [columns]="columns" [fileName]="exportFileName" [header]="excelHeader"> Selected Export |</olam-xlexport>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['template']"></olam-toolbar-action-template-loader>
+    <olam-xlexport *ngIf="toolBarBtns.template" [data]="gridData" fileType="xslx" exportType="template" [columns]="columns" [fileName]="exportFileName" [header]="excelHeader">Template</olam-xlexport>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['excelImport']"></olam-toolbar-action-template-loader>
+    <olam-xlimport *ngIf="toolBarBtns.excelImport" [columns]="columns"  [header]="excelHeader" (onImportXl)="onImportXlEvt($event)"></olam-xlimport>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['refresh']"></olam-toolbar-action-template-loader>
+    <i class="refresh-row" (click)="onRefresh()" *ngIf="toolBarBtns.refresh">&nbsp;</i>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['copy']"></olam-toolbar-action-template-loader>
+    <i class="copy-row" (click)="onCopy()" *ngIf="toolBarBtns.copy"> &nbsp; </i>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['add']"></olam-toolbar-action-template-loader>
+    <i class="add-row" (click)="onAddNew()" *ngIf="toolBarBtns.add">&nbsp;</i>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['save']"></olam-toolbar-action-template-loader>
+    <i class="save-row" (click)="onSave()" *ngIf="toolBarBtns.save">&nbsp;</i>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['delete']"></olam-toolbar-action-template-loader>
+    <i class="delete-row" (click)="onDelete()" *ngIf="toolBarBtns.delete">&nbsp;</i>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['colExpand']" ></olam-toolbar-action-template-loader>
+    <i [ngClass]="{'expand-col':!this.isColumnExpanded,'collapse-col':this.isColumnExpanded}"
+     (click)="onColumnExpand()" *ngIf="toolBarBtns.colExpand && columns.length >= maxColumn">&nbsp;</i>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['splitable']" ></olam-toolbar-action-template-loader>
+    <olam-split *ngIf="toolBarBtns.splitable" [data]="gridData" [columns]="columns" [splitBy]="splitColumn" [selectedRowIndexes]="selectedRowIndexes" (onSplitEvt)="onSplit($event)"></olam-split>
+    <olam-toolbar-action-template-loader [template]="toolbarActionTemplate['last']"></olam-toolbar-action-template-loader>
+
+  </div>
+  <div class="table-container">
+  <table class="table table-bordered" responsive (onWindowLoadEvt)="onWindowLoadEvt($event)">
+    <thead class="ui-datatable-thead" sticky>
+      <tr>
+      <th class="single-select header-check-all" *ngIf="selectionColumn ">
+        <span *ngIf="selectionColumn.all"><input type="checkbox" class="k-checkbox" id="checkall{{gridId}}" name="all-select-{{gridId}}" [(ngModel)]="allItemsChecked" (change)="checkAllClicked($event)" />
+        <label class="k-checkbox-label all-checkbox-label" for="checkall{{gridId}}"></label></span>
+      </th>
+      <ng-template ngFor let-col [ngForOf]="columns" let-i="index" >        
+        <th  style='width:5%' [ngClass]="col.cssClass" *ngIf="!dynamicHideColumns(col,-1)" >
+         <div class="header-container" (click)="sortColumn(col.field, $event)"> <span class='header-txt' *ngIf="!col.headerTemplate" title="{{col.title}}" l10nTranslate>{{col.title}} </span>          
+          <span class='header-template-wrapper' *ngIf="col.headerTemplate" title="{{col.title}}" l10nTranslate>
+            <olam-header-template-loader [column]="col"></olam-header-template-loader>
+          </span>
+          <span *ngIf="sortable" class="pull-right"> 
+              <i [ngClass]="{'': (+sortingColStatus[col.field] === +sortingStatus.NORMAL), 'ascending': (+sortingColStatus[col.field] === +sortingStatus.ASC), 'descending':(+sortingColStatus[col.field] === +sortingStatus.DESC)}" >&nbsp;</i>
+           <!-- {{ (+sortingColStatus[col.field] === +sortingStatus.NORMAL) ? '': ( (+sortingColStatus[col.field] === +sortingStatus.ASC) ? 'ASC' : 'DESC' )}} --></span>
+          <div *ngIf="filterable">
+            <olam-filter [field]="col.field" [data]="gridData" [dataType]="col.dataType" 
+            [moreDataPresent]="moreDataPresent" (onFilter)="onGridFilter($event)"></olam-filter>
+          </div>
+         </div>z
+        </th>
+      </ng-template>
+
+      <ng-template ngFor let-col [ngForOf]="actionCols" let-i="index">
+          <th  [ngClass]="col.cssClass" >
+              <span class='action-col-header' title="{{col.title}}" l10nTranslate>{{col.title}} </span>
+          </th>
+      </ng-template>
+      <th *ngIf="rowExpansion && rowExpansionCol !== false" class="expand-col"></th>
+      </tr>
+    </thead>
+    <tbody >
+        <ng-template ngFor let-row [ngForOf]="gridData" let-rowIndex="index" > 
+            
+         <!-- <tr *ngIf="pagination && createPagination(rowIndex)">
+            <td class="single-select" *ngIf="selectionColumn">
+               <input type="checkbox"  class="k-checkbox" id="check-{{gridId}}-{{rowIndex}}" name="check-{{gridId}}-{{rowIndex}}" (change)="selectUnSelectAllChecked($event,rowIndex)" [(ngModel)]="row.checked"/>
+               <label class="k-checkbox-label" for="check-{{gridId}}-{{rowIndex}}"></label>               
+            </td>
+            <ng-template ngFor let-col [ngForOf]="columns" let-i="index">
+              <td   [ngClass]="col.cssClass"  *ngIf="!dynamicHideColumns(col,rowIndex)">
+                <span class='label-txt' title='{{row[col.field]}}' *ngIf="!col.bodyTemplate && (!col.editorTemplate || !col.editable)">{{row[col.field]}}</span>
+                <div class='body-template-wrapper' *ngIf="col.bodyTemplate  && !col.editable" >
+                    <olam-body-template-loader [column]="col" [rowData]="row" [rowIndex]="rowIndex"></olam-body-template-loader>
+                  </div>
+                <div class='edit-template-wrapper' *ngIf="col.editorTemplate && col.editable && col.editable === true" >
+                  <olam-edit-template-loader [column]="col" [rowData]="row" [rowIndex]="rowIndex"></olam-edit-template-loader>
+                </div>
+              </td>
+            </ng-template>
+            <td *ngIf="rowExpansion  && rowExpansionCol !== false">
+              <a href="javascript:void(0)" (click)="row.isCollapsed=!row.isCollapsed">
+                <i class="expand-r">&nbsp;</i>
+                <!--{{(!row.isCollapsed?'Expand':'Collapse')}}-->
+               <!-- </a>
+            </td>
+          </tr>-->
+
+          <tr id="olam-tr-{{rowIndex}}" [draggable]="draggable" (drop)="drop($event)" (dragover)="allowDrop($event)" (dragstart)="drag($event)" class="draggable" [@rowEaseInOut]> <!--*ngIf="!pagination"-->
+            <td class="single-select" *ngIf="selectionColumn">
+               <input type="checkbox"  class="k-checkbox" id="check-{{gridId}}-{{rowIndex}}" name="check-{{gridId}}-{{rowIndex}}" (change)="selectUnSelectAllChecked($event,rowIndex)" [(ngModel)]="row.checked"/>
+               <label class="k-checkbox-label" for="check-{{gridId}}-{{rowIndex}}"></label>               
+            </td>
+            <ng-template ngFor let-col [ngForOf]="columns" let-i="index">
+              <td  [ngClass]="col.cssClass" style='width:5%' *ngIf="!dynamicHideColumns(col,rowIndex)">
+                <!--<span class='label-txt' title='{{row[col.field]}}' *ngIf="!col.bodyTemplate && (!col.editorTemplate || !col.editable)">{{row[col.field]}}</span>-->
+                <div class='body-template-wrapper' *ngIf="col.bodyTemplate  && (row.editable === undefined || row.editable === false)" >
+                    <olam-body-template-loader [column]="col" [rowData]="row" [rowIndex]="rowIndex"></olam-body-template-loader>
+                  </div>
+                <div class='edit-template-wrapper' *ngIf="col.editorTemplate && row.editable && row.editable === true" >
+                  <olam-edit-template-loader [column]="col" [rowData]="row" [rowIndex]="rowIndex"></olam-edit-template-loader>
+                </div>
+              </td>
+            </ng-template>
+            <ng-template ngFor let-col [ngForOf]="actionCols" let-i="index">
+                <td  [ngClass]="col.cssClass" >
+                  <div class='action-template-wrapper'>
+                      <olam-action-template-loader [column]="col" [rowData]="row" [rowIndex]="rowIndex"></olam-action-template-loader>
+                  </div>
+                </td>
+              </ng-template>
+              <td> test</td>
+            <td *ngIf="rowExpansion  && rowExpansionCol !== false">
+              <a href="javascript:void(0)" (click)="showHide(row, rowIndex)" (keydown)="onKeyDown($event)">
+                <i class="expand-r">&nbsp;</i>
+                <!--{{(!row.isCollapsed?'Expand':'Collapse')}}-->
+                </a>
+            </td>
+          </tr>
+          <tr  class="expand-col" [hidden]="!rowExpansion || !row.isCollapsed"  >
+            <td [colSpan]="columns.length+2" >
+              <div class="row-exp-wrapper">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad0 row-expand-container"  > 
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngFor="let group of columnInGroups;let k = index;"> 
+                        <ng-template ngFor let-c [ngForOf]="group" let-t="index">                       
+                          <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <olam-mcolh-template-loader [column]="c" [rowData]="row" [rowIndex]="rowIndex"></olam-mcolh-template-loader>
+                            <olam-mcol-template-loader [column]="c" [rowData]="row" [rowIndex]="rowIndex"></olam-mcol-template-loader>
+                          </div>
+                        </ng-template>
+                    </div>                  
+                  <olam-row-expansion-template-loader [rowData]="row" [rowIndex]="rowIndex" [template]="rowExpTemplate"></olam-row-expansion-template-loader>
+                </div>
+              </div>
+            </td>
+            <!--<td *ngIf="!rowExpansionCol" [colSpan]="columns.length+1">
+                <olam-row-expansion-template-loader [rowData]="row" [rowIndex]="rowIndex" [template]="rowExpTemplate"></olam-row-expansion-template-loader>
+            </td>-->
+          </tr>
+        
+          </ng-template>
+        </tbody>
+  </table>
+  <div *ngIf="gridData && gridData.length < 1 ">
+    No records present.
+  </div>
+  <div *ngIf="moreDataPresent" style="width:100%;text-align:center;border:1px solid #ccc;padding:20px;"
+   (click)="showMore($event)"> Load {{pagination.maxRow}} More </div>
+   </div>
+</div>
+

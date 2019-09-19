@@ -1,0 +1,430 @@
+
+<!--
+<h3 class="first">Basic</h3>
+<p-dataTable [value]="cars" [loading]="true">
+    <p-column field="vin" header="Vin"></p-column>
+    <p-column field="year" header="Year"></p-column>
+    <p-column field="brand" header="Brand"></p-column>
+    <p-column field="color" header="Color"></p-column>
+</p-dataTable>
+
+<h3>Dynamic columnConfig</h3>
+<p-dataTable [value]="cars">
+    <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header"></p-column>
+</p-dataTable>-->
+<!--<form>
+<p-dataTable [value]="cars" [editable]="true" >
+  <p-column field="vin" header="Vin" [editable]="true">
+    <ng-template let-col let-car="rowData" pTemplate="editor">
+      <input type="radio" value="1"/> Yes
+  </ng-template>
+  </p-column>
+  <p-column field="year" header="Year" [editable]="true"></p-column>
+  <p-column field="brand" header="Brand" [editable]="true">
+      <ng-template let-col let-car="rowData" pTemplate="editor">
+          <p-dropdown [(ngModel)]="car[col.field]" name="te" [options]="brands" [autoWidth]="false" [style]="{'width':'100%'}" required="true"  appendTo="body"></p-dropdown>
+      </ng-template>
+  </p-column>
+  <p-column field="color" header="Color" [editable]="true"></p-column>
+  <p-column field="saleDate" header="Sale Date" [editable]="true" [style]=" {'overflow':'visible' }">
+      <ng-template let-col let-car="rowData" pTemplate="body">
+           {{car[col.field]|date }}
+      </ng-template>
+  </p-column>
+</p-dataTable>
+</form>-->
+{{cars | json}}
+<olam-datagrid 
+[gridData]="cars" 
+[sortable]="true" 
+[editable]="true"  
+[splitColumn]="'extraColumn6'"
+excelHeader="Sample Header"
+exportFileName="Sample"
+[selectionColumn]="{'field':'id','show':true}"
+[toolbar]="true" 
+[colExpansion]="true"
+[toolbarButtons]="{colExpand:true,copy:true,filterable:true,template:true,add:true,excelImport:true,splitable:true}"
+[columnConfig]="colsConfig" 
+[rowExpansion]="true" 
+[rowExpansionCol]="true" 
+[moreDataPresent]="true"
+[pagination]="pageConfig"
+(onShowMoreEvt)="onShowMore($event)"
+(onAddEvt)="onAdd($event)"
+(onCopyEvt)="onCopy($event)"
+(onRefreshEvt)="onRefresh($event)"
+(onDeleteEvt)="onDelete($event)"
+(onBulkSaveEvt)="onBulkSave($event)"
+(onRowSelectEvt)="onRowSelect($event)"
+[draggable]="true"
+>
+  <olam-gridcolumn field="vin" title="VIN"> 
+     <ng-template headerTemplate let-col let-row="rowData" > 
+         <a href="javascript:void(0)" (click)="test()">text</a>
+    </ng-template>
+    <ng-template bodyTemplate let-col let-row="rowData" let-i="rowIndex"> 
+      <input type="text" name="vin" [(ngModel)]="row[col.field]" />
+      --{{i}}--
+    </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="year" title="YEAR" [cssClass]="'test'"> 
+    <ng-template bodyTemplate let-col let-row="rowData"> 
+      <input type="text" name="year" [(ngModel)]="row[col.field]" />
+    </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="brand" title="BRAND" colGrouping='1'>
+      <ng-template headerTemplate let-col let-row="rowData"> 
+        brand
+      </ng-template>
+    <ng-template bodyTemplate let-col let-row="rowData"> 
+      <input type="text" name="brand" [(ngModel)]="row[col.field]" />
+    </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="color" title="COLOR" [width]="'20%'" colGrouping='1'>
+    <ng-template bodyTemplate let-col let-row="rowData"> 
+      <input type="text" name="color" [(ngModel)]="row[col.field]" />
+    </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="saleDate" title="SALEDATE" >
+    <ng-template bodyTemplate let-col let-row="rowData"> 
+      <input type="text" name="saleDate" [(ngModel)]="row[col.field]" />
+    </ng-template>
+  </olam-gridcolumn>
+
+  <olam-gridcolumn field="extraColumn1" title="Extra Column 1" >
+    <ng-template bodyTemplate let-col let-row="rowData">
+      <input type="text" name="" [(ngModel)]="row[col.field]" />
+    </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="extraColumn2" title="Extra Column 2">
+    <ng-template bodyTemplate let-col let-row="rowData">
+      <input type="text" name="" [(ngModel)]="row[col.field]" />
+    </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="extraColumn3" title="Extra Column 3">
+      <ng-template bodyTemplate let-col let-row="rowData">
+          <input type="text" name="" [(ngModel)]="row[col.field]" />
+        </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="extraColumn4" title="Extra Column 4">
+      <ng-template bodyTemplate let-col let-row="rowData">
+          text
+        </ng-template>
+        <ng-template editTemplate let-col let-row="rowData">
+            <input type="text" name="" [(ngModel)]="row[col.field]" />
+          </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="extraColumn5" title="Extra Column 5">
+      <ng-template bodyTemplate let-col let-row="rowData">
+          <input type="text" name="" [(ngModel)]="row[col.field]" />
+        </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="extraColumn6" title="Extra Column 6">
+      <ng-template bodyTemplate let-col let-row="rowData">
+          <input type="text" name="" [(ngModel)]="row[col.field]" />
+        </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="extraColumn7" title="Extra Column 7" colGrouping='1'>
+      <ng-template bodyTemplate let-col let-row="rowData">
+          <input type="text" name="" [(ngModel)]="row[col.field]" />
+        </ng-template>
+  </olam-gridcolumn>
+  <olam-gridcolumn field="extraColumn8" title="Extra Column 8" colGrouping='1'>
+      <ng-template bodyTemplate let-col let-row="rowData">
+          <input type="text" name="" [(ngModel)]="row[col.field]" />
+        </ng-template>
+        
+  </olam-gridcolumn>
+  <olam-gridcolumn field="id" title="">
+      <ng-template actionColTemplate let-col let-row="rowData">
+          <a href="javascript:void(0)" (click)="onEdit(row)"> Edit</a>
+        </ng-template>
+  </olam-gridcolumn>
+  <ng-template rowExpansionTemplate let-row="rowData" let-i="rowIndex" > 
+      <label>Model {{i}}</label>   
+      <input type="text" name="test" [(ngModel)]="row['model']" />
+     <div class="expanded-footer pull-right">
+       <button>RESET</button>
+       <button>SAVE</button>
+       <button>CANCEL</button>
+     </div>
+  </ng-template>
+  <ng-template toolbarActionTemplate before="add">
+      <a href="javascript:void(0)"> icon1</a>
+  </ng-template>
+  <ng-template toolbarActionTemplate before="delete">
+    <a href="javascript:void(0)"> icon2</a>
+</ng-template>
+<ng-template toolbarActionTemplate>
+  <a href="javascript:void(0)"> icon3</a>
+</ng-template>
+</olam-datagrid>
+<br/>
+<br/>
+<button (click)="reset1()">Reset</button>
+<!--
+<olam-datagrid [gridData]="cars1" [editable]="false" [rowExpansion]="true"
+[rowExpansionCol]="false" [selectionColumn]="true"
+[columnConfig]="colsConfig" 
+(onRowSelectEvt)="onRowSelect($event)"
+>
+    <olam-gridcolumn field="id" title="">
+       <ng-template headerTemplate let-col let-row="rowData" > 
+           <input type="checkbox"  class="k-checkbox" name="all-check" />
+           
+           <label class="k-checkbox-label" ></label>
+         </ng-template>
+       <ng-template bodyTemplate let-col let-row="rowData"  let-i="rowIndex"> 
+         <input type="checkbox" id="chk-{{row[col.field]}}" class="k-checkbox" name="chk-{{row[col.field]}}" [(ngModel)]="row.checked" />
+         <label class="k-checkbox-label" for="chk-{{row[col.field]}}"></label>--{{i}}
+       </ng-template>
+    </olam-gridcolumn>
+   <olam-gridcolumn field="vin" title="VIN">
+     <ng-template bodyTemplate let-col let-row="rowData"> 
+       <input type="text" name="vin" [(ngModel)]="row[col.field]" />
+     </ng-template>
+     <ng-template bodyTemplate let-col let-row="rowData"> 
+      <kendo-datepicker class="filter-input" [format]="'dd-MMM-yyyy'" [(ngModel)]="row[col.field]" ></kendo-datepicker>
+     </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="year" title="YEAR">
+     <ng-template bodyTemplate let-col let-row="rowData"> 
+       <input type="text" name="year" [(ngModel)]="row[col.field]" />
+     </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="brand" title="BRAND">
+     <ng-template bodyTemplate let-col let-row="rowData"> 
+       <input type="text" name="brand" [(ngModel)]="row[col.field]" />
+     </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="color" title="COLOR">
+     <ng-template bodyTemplate let-col let-row="rowData" let-i="rowIndex"> 
+       <olam-singleselect [data]="singleSelect" name="txt{{i}}" [(ngModel)]="row[col.field]"></olam-singleselect>
+     </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="saleDate" title="SALEDATE">
+     <ng-template bodyTemplate let-col let-row="rowData"> 
+       <select [(ngModel)]="row[col.field]">
+         <option *ngFor="let obj of singleSelect" value="{{obj.value}}">{{obj.label}}</option>
+       </select>
+     </ng-template>
+   </olam-gridcolumn>
+   <ng-template rowExpansionTemplate let-row="rowData"> 
+     <label>Model</label>   
+     <input type="text" name="test" [(ngModel)]="row['model']" />
+   </ng-template>
+ </olam-datagrid>-->
+ <!--
+ <button (click)="remove()">Remove</button>
+ <button (click)="orderChange()">change</button>
+ <olam-datagrid 
+ *ngIf="colsConfig.length > 0"
+ [gridData]="cars" 
+ [sortable]="true" 
+ [editable]="true"  
+ [splitColumn]="'extraColumn6'"
+ excelHeader="Sample Header"
+ exportFileName="Sample"
+ [selectionColumn]="{'field':'id','show':true}"
+ [toolbar]="true" 
+ [colExpansion]="true"
+ [toolbarButtons]="{colExpand:true,copy:true,filterable:true,template:true,add:true,excelImport:true,splitable:true}"
+ [columnConfig]="colsConfig" 
+ [rowExpansion]="true" 
+ [rowExpansionCol]="true" 
+ [moreDataPresent]="true"
+ [pagination]="pageConfig"
+ (onShowMoreEvt)="onShowMore($event)"
+ (onAddEvt)="onAdd($event)"
+ (onCopyEvt)="onCopy($event)"
+ (onRefreshEvt)="onRefresh($event)"
+ (onDeleteEvt)="onDelete($event)"
+ (onBulkSaveEvt)="onBulkSave($event)"
+ (onRowSelectEvt)="onRowSelect($event)"
+ > 
+   <olam-gridcolumn field="vin" title="VIN">
+      <ng-template headerTemplate let-col let-row="rowData" > 
+          <a href="javascript:void(0)" (click)="test()">text</a>
+     </ng-template>
+     <ng-template bodyTemplate let-col let-row="rowData" let-i="rowIndex"> 
+       <input type="text" name="vin" [(ngModel)]="row[col.field]" />
+       --{{i}}--
+     </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="year" title="YEAR" [cssClass]="'test'"> 
+     <ng-template bodyTemplate let-col let-row="rowData"> 
+       <input type="text" name="year" [(ngModel)]="row[col.field]" />
+     </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="brand" title="BRAND">
+       <ng-template headerTemplate let-col let-row="rowData"> 
+         brand
+       </ng-template>
+     <ng-template bodyTemplate let-col let-row="rowData"> 
+       <input type="text" name="brand" [(ngModel)]="row[col.field]" />
+     </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="color" title="COLOR" [width]="'20%'">
+     <ng-template bodyTemplate let-col let-row="rowData"> 
+       <input type="text" name="color" [(ngModel)]="row[col.field]" />
+     </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="saleDate" title="SALEDATE" >
+     <ng-template bodyTemplate let-col let-row="rowData"> 
+       <input type="text" name="saleDate" [(ngModel)]="row[col.field]" />
+     </ng-template>
+   </olam-gridcolumn>
+ 
+   <olam-gridcolumn field="extraColumn1" title="Extra Column 1" >
+     <ng-template bodyTemplate let-col let-row="rowData">
+       <input type="text" name="" [(ngModel)]="row[col.field]" />
+     </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="extraColumn2" title="Extra Column 2">
+     <ng-template bodyTemplate let-col let-row="rowData">
+       <input type="text" name="" [(ngModel)]="row[col.field]" />
+     </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="extraColumn3" title="Extra Column 3">
+       <ng-template bodyTemplate let-col let-row="rowData">
+           <input type="text" name="" [(ngModel)]="row[col.field]" />
+         </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="extraColumn4" title="Extra Column 4">
+       <ng-template bodyTemplate let-col let-row="rowData">
+           text
+         </ng-template>
+         <ng-template editTemplate let-col let-row="rowData">
+             <input type="text" name="" [(ngModel)]="row[col.field]" />
+           </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="extraColumn5" title="Extra Column 5">
+       <ng-template bodyTemplate let-col let-row="rowData">
+           <input type="text" name="" [(ngModel)]="row[col.field]" />
+         </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="extraColumn6" title="Extra Column 6">
+       <ng-template bodyTemplate let-col let-row="rowData">
+           <input type="text" name="" [(ngModel)]="row[col.field]" />
+         </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="extraColumn7" title="Extra Column 7">
+       <ng-template bodyTemplate let-col let-row="rowData">
+           <input type="text" name="" [(ngModel)]="row[col.field]" />
+         </ng-template>
+   </olam-gridcolumn>
+   <olam-gridcolumn field="extraColumn8" title="Extra Column 8">
+       <ng-template bodyTemplate let-col let-row="rowData">
+           <input type="text" name="" [(ngModel)]="row[col.field]" />
+         </ng-template>
+         
+   </olam-gridcolumn>
+   <olam-gridcolumn field="id" title="">
+       <ng-template actionColTemplate let-col let-row="rowData">
+           <a href="javascript:void(0)" (click)="onEdit(row)"> Edit</a>
+         </ng-template>
+   </olam-gridcolumn>
+   <ng-template rowExpansionTemplate let-row="rowData" let-i="rowIndex" > 
+       <label>Model {{i}}</label>   
+       <input type="text" name="test" [(ngModel)]="row['model']" />
+      <div class="expanded-footer pull-right">
+        <button>RESET</button>
+        <button>SAVE</button>
+        <button>CANCEL</button>
+      </div>
+   </ng-template>
+   <ng-template toolbarActionTemplate>
+       <a href="javascript:void(0)"> icon1</a>
+   </ng-template>
+ </olam-datagrid>
+ <br/>
+ <br/>
+ <!--
+ <olam-datagrid [gridData]="cars1" [editable]="false" [rowExpansion]="true"
+ [rowExpansionCol]="false" >
+     <olam-gridcolumn field="id" title="">
+        <ng-template headerTemplate let-col let-row="rowData"> 
+            <input type="checkbox"  class="k-checkbox" name="all-check" />
+            <label class="k-checkbox-label" ></label>
+          </ng-template>
+        <ng-template bodyTemplate let-col let-row="rowData"> 
+          <input type="checkbox" id="chk-{{row[col.field]}}" class="k-checkbox" name="chk-{{row[col.field]}}" [(ngModel)]="row.checked" />
+          <label class="k-checkbox-label" for="chk-{{row[col.field]}}"></label>
+        </ng-template>
+     </olam-gridcolumn>
+    <olam-gridcolumn field="vin" title="VIN">
+      <ng-template bodyTemplate let-col let-row="rowData"> 
+        <input type="text" name="vin" [(ngModel)]="row[col.field]" />
+      </ng-template>
+      <ng-template bodyTemplate let-col let-row="rowData"> 
+        <a href="javascript:void(0)" (click)="row.isCollapsed=!row.isCollapsed">{{row[col.field]}}</a>
+      </ng-template>
+    </olam-gridcolumn>
+    <olam-gridcolumn field="year" title="YEAR">
+      <ng-template bodyTemplate let-col let-row="rowData"> 
+        <input type="text" name="year" [(ngModel)]="row[col.field]" />
+      </ng-template>
+    </olam-gridcolumn>
+    <olam-gridcolumn field="brand" title="BRAND">
+      <ng-template bodyTemplate let-col let-row="rowData"> 
+        <input type="text" name="brand" [(ngModel)]="row[col.field]" />
+      </ng-template>
+    </olam-gridcolumn>
+    <olam-gridcolumn field="color" title="COLOR">
+      <ng-template bodyTemplate let-col let-row="rowData"> 
+        <input type="text" name="color" [(ngModel)]="row[col.field]" />
+      </ng-template>
+    </olam-gridcolumn>
+    <olam-gridcolumn field="saleDate" title="SALEDATE">
+      <ng-template bodyTemplate let-col let-row="rowData"> 
+        <input type="text" name="saleDate" [(ngModel)]="row[col.field]" />
+      </ng-template>
+    </olam-gridcolumn>
+    <ng-template rowExpansionTemplate let-row="rowData"> 
+      <label>Model</label>   
+      <input type="text" name="test" [(ngModel)]="row['model']" />
+    </ng-template>
+  </olam-datagrid>
+  -->
+  <!--<button (click)="remove()">Remove</button>
+  <button (click)="orderChange()">change</button>
+  ghjghjgjgj-->
+  {{singleSelect | json}}
+  {{testModel | json}}
+  {{multiModel|json}}
+<!--<olam-singleselect style="width:200px;height:40px;background-color:#ccc;" [data]="singleSelect" [(ngModel)]="testModel" name="testModel" id="testModel"></olam-singleselect>
+<olam-multiselect style="width:200px;height:40px;background-color:#ccc;" [data]="singleSelect" [(ngModel)]="multiModel" name="testModel" id="multiModel"></olam-multiselect>
+
+  -->
+{{state | json}}
+<kendo-grid
+[data]="gridData"
+[pageSize]="state.take"
+[skip]="state.skip"
+[sort]="state.sort"
+[filter]="state.filter"
+[sortable]="true"
+[pageable]="true"
+[filterable]="true"
+[groupable]="true"
+(filterChange)="filterChange($event)"
+(dataStateChange)="dataStateChange($event)"
+>
+<kendo-grid-column *ngFor="let column of columnConfig;let i = index;" field="{{column.field}}" title="{{column.title}}" width="{{column.width}}" filterable="{{column.filterable}}" filter="{{column.filterType}}" format="{{column.format}}">
+</kendo-grid-column>
+<!--<kendo-grid-column field="ProductName" title="Product Name" filter="text">
+</kendo-grid-column>
+<kendo-grid-column field="FirstOrderedOn" title="First Ordered On" width="240" filter="date" format="{0:d}">
+</kendo-grid-column>
+<kendo-grid-column field="UnitPrice" title="Unit Price" width="180" filter="numeric" format="{0:c}">
+</kendo-grid-column>
+<kendo-grid-column field="Discontinued" width="120" filter="boolean">
+<ng-template kendoGridCellTemplate let-dataItem>
+    <input type="checkbox" [checked]="dataItem.Discontinued" disabled/>
+</ng-template>
+</kendo-grid-column>-->
+</kendo-grid>
+<button (click)="message('error')">error</button>
+<button (click)="message('success')">success</button>
+<app-message [(msgs)]="messages"></app-message>

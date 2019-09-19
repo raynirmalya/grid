@@ -1,0 +1,69 @@
+<div class="cuppa-dropdown" (clickOutside)="closeDropdown()">
+    <div class="selected-list">
+        <div tabindex="0"  class="multiselect btn-primary crs-pointer" (click)="toggleDropdown($event)" [ngClass]="{'disabled': settings.disabled}">
+            <span *ngIf="selectedItems?.length == 0">{{settings.text}}</span>
+            <span *ngIf="settings.singleSelection">
+                <span *ngFor="let item of selectedItems;trackBy: trackByFn;">
+                    {{item.label}}
+                </span>
+            </span>
+            <div class="selectedItemList" *ngIf="selectedItems?.length > 0 && !settings.singleSelection">
+                <div class="selectedItem" *ngFor="let item of selectedItems;trackBy: trackByFn;let k = index" [hidden]="k > settings.badgeShowLimit-1">
+                    <span class="selectedItem-label">{{item.label}}</span>
+                    <span class="fa fa-remove selectedItem-remove" (click)="onItemClick(item,k,$event)"></span>
+                </div>
+            </div> 
+            <span *ngIf="selectedItems?.length > settings.badgeShowLimit">+{{selectedItems?.length - settings.badgeShowLimit }}</span>
+            <span class="fa caretSym" [ngClass]="{'fa-angle-down': !isActive,'fa-angle-up':isActive}"></span>
+        </div>      
+    </div>
+    <div class="dropdown-list" [hidden]="!isActive">
+    <div class="list-area">
+        <div class="ItemToSelect select-all" *ngIf="settings.enableCheckAll && !settings.singleSelection && !settings.limitSelection" (click)="toggleSelectAll()">
+            <input *ngIf="settings.showCheckbox" type="checkbox" [checked]="isSelectAll" [disabled]="settings.limitSelection == selectedItems?.length"/>
+            <label>
+                <span [hidden]="isSelectAll">{{settings.selectAllText}}</span>
+                <span [hidden]="!isSelectAll">{{settings.unSelectAllText}}</span>
+            </label>
+        </div>   
+        <div class="search-filter" *ngIf="settings.enableSearchFilter">
+            <span class="fa fa-search"></span>
+            <input type="text" [placeholder]="settings.searchPlaceholderText" [(ngModel)]="filter.label">
+        </div> 
+    <ul *ngIf="!settings.groupBy" class="mar0 selectDropdownArea">
+        <span *ngIf="itemTempl">
+            <li *ngFor="let item of data | listFilter:filter; let i = index;" (click)="onItemClick(item,i,$event)" class="ItemToSelect">
+            <input *ngIf="settings.showCheckbox" type="checkbox" [checked]="isSelected(item)" [disabled]="settings.limitSelection == selectedItems?.length && !isSelected(item)"/>
+            <label></label>
+            <c-templateRenderer [data]="itemTempl" [item]="item"></c-templateRenderer>
+        </li>
+        </span>
+        <span *ngIf="!itemTempl" >
+        <li *ngFor="let item of data | listFilter:filter; let i = index;" (click)="onItemClick(item,i,$event)" class="ItemToSelect">
+            <input *ngIf="settings.showCheckbox" type="checkbox" [checked]="isSelected(item)" [disabled]="settings.limitSelection == selectedItems?.length && !isSelected(item)"/>
+            <label>{{item.label}}</label>
+        </li>
+        </span>
+    </ul>
+    <div *ngIf="settings.groupBy">
+    <ul *ngFor="let obj of groupedData ; let i = index;" class="list-grp">
+        <h4>{{obj.key}}</h4>
+        <span *ngIf="itemTempl" >
+        <li *ngFor="let item of obj.value | listFilter:filter; let i = index;" (click)="onItemClick(item,i,$event)" class="ItemToSelect">
+            <input *ngIf="settings.showCheckbox" type="checkbox" [checked]="isSelected(item)" [disabled]="settings.limitSelection == selectedItems?.length && !isSelected(item)"/>
+            <label></label>
+            <c-templateRenderer [data]="itemTempl" [item]="item"></c-templateRenderer>
+        </li>
+        </span>
+        <span *ngIf="!itemTempl" >
+        <li *ngFor="let item of obj.value | listFilter:filter; let i = index;" (click)="onItemClick(item,i,$event)" class="ItemToSelect">
+            <input *ngIf="settings.showCheckbox" type="checkbox" [checked]="isSelected(item)" [disabled]="settings.limitSelection == selectedItems?.length && !isSelected(item)"/>
+            <label>{{item.label}}</label>
+        </li>
+        </span>
+    </ul>
+    </div>
+    <h5 class="list-message" *ngIf="data?.length == 0">{{settings.noDataLabel}}</h5>
+    </div>
+    </div>
+</div>

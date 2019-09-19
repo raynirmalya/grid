@@ -1,0 +1,20 @@
+
+<div class='filter-{{dataType}}' >
+    <span *ngIf="dataType === 'string' || dataType === 'number'" >
+        <input class="filter-input" type="text" [(ngModel)]="filterBy" (keyup)="filterData()" /><a href="javascript:void(0)" (click)="clear()">X</a>
+    </span>
+        <olam-singleselect *ngIf="dataType === 'multiselect'"
+        [data]="itemList" 
+        [(ngModel)]="filterBy" 
+        [textField]="'itemName'"
+        [valueField]="'id'"
+        (onSelect)="onItemSelect($event)"
+        (onDeSelect)="OnItemDeSelect($event)" 
+        (onSelectAll)="onSelectAll($event)" 
+        (onDeSelectAll)="onDeSelectAll($event)">
+    </olam-singleselect>
+
+ <kendo-datepicker *ngIf="dataType === 'date'" class="filter-input" [format]="'dd-MMM-yyyy'" [(ngModel)]="filterBy" ></kendo-datepicker>
+<div>
+
+
